@@ -56,7 +56,7 @@ Please do it by yourself
 
 ### (I’ll take MSCOCO for example and run the codes in Lorne0/arctic-captions)
 ### Data preprocessing:
-1. Download data (Already in cml11:/tmp3/alvin/dataset)
+#### Download data (Already in cml11:/tmp3/alvin/dataset)
 MSCOCO 
 * http://mscoco.org/dataset/#download
 
@@ -66,7 +66,7 @@ Flickr8k
 * http://nlp.cs.illinois.edu/HockenmaierGroup/Framing_Image_Description/Flickr8k_Dataset.zip
 * http://nlp.cs.illinois.edu/HockenmaierGroup/Framing_Image_Description/Flickr8k_text.zip
 
-2. Download caffe model (just google these name, it’s easy to find):
+#### Download caffe model (just google these name, it’s easy to find):
 * VGG_ILSVRC_19_layers.caffemodel
 * VGG_ILSVRC_19_layers_deploy.prototxt
 * (if need) VGG_ILSVRC_16_layers.caffemodel
