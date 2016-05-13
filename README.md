@@ -95,15 +95,23 @@ THEANO_FLAGS='mode=FAST_RUN,floatX=float32,device=gpu1' python evaluate_coco.py
 
 ###Evaluating
 After get a ‘coco_deterministic_model.exp1.npz.pkl’, run
+
 python generate_caps.py -p 25 /path/coco_deterministic_model.exp1.npz ./result/res
+
 where -p 25 means use 25 cores in parallel, be careful not to use too many cores
+
 Get ‘res.dev.txt’ and ‘res.test.txt’
+
 Get https://github.com/tylin/coco-caption first
+
 python score.py dev /path/res.dev.txt >> score_result
+
 python score.py test /path/res.test.txt >> score_result
 
-Result
-10 epoch
+#### Result
+
+##### 10 epoch
+
 ./result/res.dev.txt
 {'reflen': 52239, 'guess': [54180, 49180, 44180, 39180], 'testlen': 54180,
 'correct': [34666, 15767, 6568, 2784]}
@@ -130,7 +138,7 @@ CIDEr:	0.614729348648
 
 
 
-17 epoch(early stop)
+##### 17 epoch(early stop)
 ./result/res4.dev.txt
 {'reflen': 55065, 'guess': [58795, 53795, 48795, 43795], 'testlen': 58795,
 'correct': [36292, 16302, 6853, 2946]}
