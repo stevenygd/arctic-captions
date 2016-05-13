@@ -90,19 +90,17 @@ Flickr8k
 * coco_feature.val.exp1.pkl
 
 ###Training
-
-#### Remember to change the model path in evaluate_coco.py
-
-#### THEANO_FLAGS='mode=FAST_RUN,floatX=float32,device=gpu1' python evaluate_coco.py
+Remember to change the model path in evaluate_coco.py
+THEANO_FLAGS='mode=FAST_RUN,floatX=float32,device=gpu1' python evaluate_coco.py
 
 ###Evaluating
-#### After get a ‘coco_deterministic_model.exp1.npz.pkl’, run
-##### python generate_caps.py -p 25 /path/coco_deterministic_model.exp1.npz ./result/res
-##### where -p 25 means use 25 cores in parallel, be careful not to use too many cores
-#### Get ‘res.dev.txt’ and ‘res.test.txt’
-#### Get https://github.com/tylin/coco-caption first
-#### python score.py dev /path/res.dev.txt >> score_result
-#### python score.py test /path/res.test.txt >> score_result
+After get a ‘coco_deterministic_model.exp1.npz.pkl’, run
+python generate_caps.py -p 25 /path/coco_deterministic_model.exp1.npz ./result/res
+where -p 25 means use 25 cores in parallel, be careful not to use too many cores
+Get ‘res.dev.txt’ and ‘res.test.txt’
+Get https://github.com/tylin/coco-caption first
+python score.py dev /path/res.dev.txt >> score_result
+python score.py test /path/res.test.txt >> score_result
 
 Result
 10 epoch
