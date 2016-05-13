@@ -43,62 +43,57 @@ Salakhutdinov, Richard Zemel, Yoshua Bengio. *To appear ICML (2015)*
 
 The code is released under a [revised (3-clause) BSD License](http://directory.fsf.org/wiki/License:BSD_3Clause).
 
-## Update on 5/13/2016 by Lorne0
+## Implementation Update on 5/13/2016 by Lorne0
 
-Paper: http://arxiv.org/pdf/1502.03044v3.pdf
-Source code: 
-https://github.com/kelvinxu/arctic-captions
-Show, Attend and Tell の再現をやる
-https://github.com/intuinno/arctic-captions
-https://github.com/Lorne0/arctic-captions
-Environment:
+### Paper: http://arxiv.org/pdf/1502.03044v3.pdf
+### Source code: 
+* https://github.com/kelvinxu/arctic-captions
+* Show, Attend and Tell の再現をやる
+* https://github.com/intuinno/arctic-captions
+* https://github.com/Lorne0/arctic-captions
+### Environment:
 Please do it by yourself
 
-(I’ll take MSCOCO for example and run the codes in Lorne0/arctic-captions)
-Data preprocessing:
-Download data (Already in cml11:/tmp3/alvin/dataset)
-MSCOCO
-http://mscoco.org/dataset/#download
+### (I’ll take MSCOCO for example and run the codes in Lorne0/arctic-captions)
+### Data preprocessing:
+#### Download data (Already in cml11:/tmp3/alvin/dataset)
+MSCOCO 
+* http://mscoco.org/dataset/#download
 Flickr30k
 Flickr8k
-http://nlp.cs.illinois.edu/HockenmaierGroup/Framing_Image_Description/Flickr8k_Dataset.zip
-http://nlp.cs.illinois.edu/HockenmaierGroup/Framing_Image_Description/Flickr8k_text.zip
-Download caffe model (just google these name, it’s easy to find):
-VGG_ILSVRC_19_layers.caffemodel
-VGG_ILSVRC_19_layers_deploy.prototxt
-(if need) VGG_ILSVRC_16_layers.caffemodel
-(if need) VGG_ILSVRC_16_layers_deploy.prototxt
-Copy data in another dir, and copy the “preprocess.sh” to the new data dir,
-and run it to get 224x224 pictures
-run ‘make_annotations.py’ to combine both captions in ‘captions.token’
-ex: COCO_train2014_000000517830.jpg#0	A stop sign and 
-a lamp post on a street corner
-After get ‘captions.token’, run ‘make_dic.py’ to get ‘dictionary.pkl’
-Run ‘save_dic.py’ to get ‘capdict.pkl’(key:an image name, value: a list of
-captions)
-Run ‘prepare_model_coco.py’ to get(need 7~8hrs to extract features):
-coco_align.test.exp1.pkl
-coco_align.train.exp1.pkl
-coco_align.val.exp1.pkl
-coco_feature.test.exp1.pkl
-coco_feature.train.exp1.npz
-coco_feature.val.exp1.pkl
+* http://nlp.cs.illinois.edu/HockenmaierGroup/Framing_Image_Description/Flickr8k_Dataset.zip
+* http://nlp.cs.illinois.edu/HockenmaierGroup/Framing_Image_Description/Flickr8k_text.zip
+#### Download caffe model (just google these name, it’s easy to find):
+* VGG_ILSVRC_19_layers.caffemodel
+* VGG_ILSVRC_19_layers_deploy.prototxt
+* (if need) VGG_ILSVRC_16_layers.caffemodel
+* (if need) VGG_ILSVRC_16_layers_deploy.prototxt
+#### Copy data in another dir, and copy the “preprocess.sh” to the new data dir, and run it to get 224x224 pictures
+#### run ‘make_annotations.py’ to combine both captions in ‘captions.token’
+* ex: COCO_train2014_000000517830.jpg#0	A stop sign and a lamp post on a street corner
+#### After get ‘captions.token’, run ‘make_dic.py’ to get ‘dictionary.pkl’
+#### Run ‘save_dic.py’ to get ‘capdict.pkl’(key:an image name, value: a list of captions)
+#### Run ‘prepare_model_coco.py’ to get(need 7~8hrs to extract features):
+* coco_align.test.exp1.pkl
+* coco_align.train.exp1.pkl
+* coco_align.val.exp1.pkl
+* coco_feature.test.exp1.pkl
+* coco_feature.train.exp1.npz
+* coco_feature.val.exp1.pkl
 
-
-Training
-Remember to change the model path in evaluate_coco.py
-THEANO_FLAGS='mode=FAST_RUN,floatX=float32,device=gpu1' python
+###Training
+#### Remember to change the model path in evaluate_coco.py
+#### THEANO_FLAGS='mode=FAST_RUN,floatX=float32,device=gpu1' python
 evaluate_coco.py
-Evaluating
-After get a ‘coco_deterministic_model.exp1.npz.pkl’, run 
-python generate_caps.py -p 25 /path/coco_deterministic_model.exp1.npz
-./result/res
-where -p 25 means use 25 cores in parallel, be careful not to use too many
-cores
-Get ‘res.dev.txt’ and ‘res.test.txt’
-Get https://github.com/tylin/coco-caption first
-python score.py dev /path/res.dev.txt >> score_result
-python score.py test /path/res.test.txt >> score_result
+
+###Evaluating
+#### After get a ‘coco_deterministic_model.exp1.npz.pkl’, run
+##### python generate_caps.py -p 25 /path/coco_deterministic_model.exp1.npz ./result/res
+##### where -p 25 means use 25 cores in parallel, be careful not to use too many cores
+#### Get ‘res.dev.txt’ and ‘res.test.txt’
+#### Get https://github.com/tylin/coco-caption first
+#### python score.py dev /path/res.dev.txt >> score_result
+#### python score.py test /path/res.test.txt >> score_result
 
 Result
 10 epoch
