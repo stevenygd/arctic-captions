@@ -51,6 +51,7 @@ The code is released under a [revised (3-clause) BSD License](http://directory.f
 * Show, Attend and Tell の再現をやる http://penzant.hatenadiary.com/entry/2016/01/24/000000
 * https://github.com/intuinno/arctic-captions
 * https://github.com/Lorne0/arctic-captions
+
 ### Environment:
 Please do it by yourself
 
