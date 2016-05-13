@@ -57,7 +57,7 @@ Please do it by yourself
 
 ### (I’ll take MSCOCO for example and run the codes in Lorne0/arctic-captions)
 ### Data preprocessing:
-#### Download data (Already in cml11:/tmp3/alvin/dataset)
+#### Download data
 MSCOCO 
 * http://mscoco.org/dataset/#download
 
