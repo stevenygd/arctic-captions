@@ -90,7 +90,7 @@ def load_data(load_train=True, load_dev=True, load_test=True, path='./data/coco/
         train = (train_cap, train_feat)
 
     if load_dev:
-        with open(path+'coco_align.dev' + experimentPrefix + '.pkl', 'rb') as f:
+        with open(path+'coco_align.val' + experimentPrefix + '.pkl', 'rb') as f:
             dev_cap = pkl.load(f)
             dev_feat = pkl.load(f)
         valid = (dev_cap, dev_feat)

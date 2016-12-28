@@ -87,6 +87,7 @@ def main(model, saveto, k=5, normalize=False, zero_pad=False, datasets='dev,test
             caps[resp[0]] = resp[1]
             print 'Sample ', (idx+1), '/', contexts.shape[0], ' Done'
             print resp[1]
+            print ' '.join([ word_idict[w] for w in resp[1] if w != 0 ])
         return caps
 
     ds = datasets.strip().split(',')

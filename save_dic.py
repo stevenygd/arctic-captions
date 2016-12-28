@@ -1,6 +1,11 @@
 from os import listdir
+import os
 import json
 import cPickle
+
+
+coco_dir = "/home/ec2-user/captions/l-arctic-captions/data/coco/"
+coco_annotations = os.path.join(coco_dir, 'annotations')
 
 def rename_train(s):
     return 'COCO_train2014_'+'0'*(12-len(s))+s+'.jpg'
@@ -10,7 +15,8 @@ def rename_val(s):
 
 dic={}
 
-with open('/tmp3/alvin/dataset/MSCOCO2014/captions_train2014.json') as fp:
+with open(os.path.join(coco_annotations, 'captions_train2014.json')) as fp:
+# with open('/tmp3/alvin/dataset/MSCOCO2014/captions_train2014.json') as fp:
     data = json.load(fp)
 
 cnt=0
@@ -27,7 +33,9 @@ for i in range(len(data['annotations'])):
         cnt+=1
 print cnt
 
-with open('/tmp3/alvin/dataset/MSCOCO2014/captions_val2014.json') as fp:
+
+with open(os.path.join(coco_annotations, 'captions_val2014.json')) as fp:
+# with open('/tmp3/alvin/dataset/MSCOCO2014/captions_val2014.json') as fp:
     data = json.load(fp)
 
 for i in range(len(data['annotations'])):
