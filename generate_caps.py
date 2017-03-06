@@ -56,7 +56,7 @@ def gen_model(queue, rqueue, pid, model, options, k, normalize, word_idict, samp
         seq = _gencap(context)
         rqueue.put((idx, seq))
 
-    return 
+    return
 
 def main(model, saveto, k=5, normalize=False, zero_pad=False, n_process=5, datasets='dev,test', sampling=False, pkl_name=None):
     # load model model_options
@@ -67,10 +67,12 @@ def main(model, saveto, k=5, normalize=False, zero_pad=False, n_process=5, datas
 
     # fetch data, skip ones we aren't using to save time
     # import pdb; pdb.set_trace()
-    
+
     load_data, prepare_data = get_dataset(options['dataset'])
-    _, valid, test, worddict = load_data(load_train=False, load_dev=True if 'dev' in datasets else False,
-                                             load_test=True if 'test' in datasets else False)
+    train, valid, test, worddict = load_data(
+        load_train=True if 'train' in datasets else False,
+        load_dev=True if 'dev' in datasets else False,
+        load_test=True if 'test' in datasets else False)
 
     # <eos> means end of sequence (aka periods), UNK means unknown
     word_idict = dict()
@@ -84,7 +86,7 @@ def main(model, saveto, k=5, normalize=False, zero_pad=False, n_process=5, datas
     rqueue = Queue()
     processes = [None] * n_process
     for midx in xrange(n_process):
-        processes[midx] = Process(target=gen_model, 
+        processes[midx] = Process(target=gen_model,
                                   args=(queue,rqueue,midx,model,options,k,normalize,word_idict, sampling))
         processes[midx].start()
 
@@ -132,6 +134,25 @@ def main(model, saveto, k=5, normalize=False, zero_pad=False, n_process=5, datas
             caps = _seqs2words(_retrieve_jobs(valid[1].shape[0]))
             # import pdb; pdb.set_trace()
             with open(saveto+'.dev.txt', 'w') as f:
+                print >>f, '\n'.join(caps)
+            print 'Done'
+
+        if dd == 'val':
+            print 'Development Set...',
+            _send_jobs(allval[1])
+            # caps = _seqs2words(_retrieve_jobs(len(valid[1])))
+            caps = _seqs2words(_retrieve_jobs(allval[1].shape[0]))
+            with open(saveto+'.allval.txt', 'w') as f:
+                print >>f, '\n'.join(caps)
+            print 'Done'
+
+        if dd == 'train':
+            print 'Training Set...',
+            _send_jobs(train[1])
+            # caps = _seqs2words(_retrieve_jobs(len(test[1])))
+            caps = _seqs2words(_retrieve_jobs(train[1].shape[0]))
+            # import pdb; pdb.set_trace()
+            with open(saveto+'.train.txt', 'w') as f:
                 print >>f, '\n'.join(caps)
             print 'Done'
 

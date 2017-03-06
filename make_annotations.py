@@ -2,7 +2,7 @@ from os import listdir
 import os
 import json
 
-coco_dir = "/home/ec2-user/captions/l-arctic-captions/data/coco/"
+coco_dir = "/home/gy46/arctic-captions/data/coco/"
 def rename_train(s):
     return 'COCO_train2014_'+'0'*(12-len(s))+s+'.jpg'
 

@@ -92,16 +92,17 @@ def load_data(load_train=True, load_dev=True, load_test=True, path='./data/coco/
     if load_dev:
         with open(path+'coco_align.val' + experimentPrefix + '.pkl', 'rb') as f:
             dev_cap = pkl.load(f)
-            dev_feat = pkl.load(f)
+        dev_feat = load_sparse_csr(path+'coco_feature.val' + experimentPrefix + '.npz')
         valid = (dev_cap, dev_feat)
 
     if load_test:
         with open(path+'coco_align.test' + experimentPrefix + '.pkl', 'rb') as f:
             test_cap = pkl.load(f)
-            test_feat = pkl.load(f)
+        test_feat = load_sparse_csr(path+'coco_feature.test' + experimentPrefix + '.npz')
         test = (test_cap, test_feat)
 
     with open(path+'dictionary.pkl', 'rb') as f:
         worddict = pkl.load(f)
 
+    # return train, valid, test, worddict
     return train, valid, test, worddict

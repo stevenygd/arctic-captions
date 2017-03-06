@@ -17,26 +17,26 @@ import pandas as pd
 import nltk
 import pdb
 
-coco_dir = "/home/ec2-user/captions/l-arctic-captions/data/coco/"
-caffe_dir = '/home/ec2-user/src/caffe/'
+coco_dir = "/home/gy46/arctic-captions/data/coco/"
+caffe_dir = '/home/gy46/caffe/'
 vgg_dir = os.path.join(caffe_dir, 'models', 'vgg_ilsvrc_19')
 
 #Setup
 print 'Start Setup'
-#originalImagesPath = 'data/coco/originalImages'
-# trainImagesPath = '/tmp3/alvin/dataset/MSCOCO2014/train2014_224/'
 trainImagesPath = os.path.join(coco_dir, 'train2014')
-# valImagesPath = '/tmp3/alvin/dataset/MSCOCO2014/val2014_224/'
 valImagesPath = os.path.join(coco_dir, 'val2014')
-# vgg_ilsvrc_19_layoutFileName = '/tmp3/alvin/VGG_ILSVRC_19_layers_deploy.prototxt'
+testImagesPath = os.path.join(coco_dir, 'test2014')
+
+imagesPaths = {
+    'train' : trainImagesPath,
+    'val'   : valImagesPath,
+    'test'  : testImagesPath
+}
+
 vgg_ilsvrc_19_layoutFileName = os.path.join(vgg_dir, 'VGG_ILSVRC_19_layers_deploy.prototxt')
-# vgg_ilsvrc_19_modelFileName = '/tmp3/alvin/VGG_ILSVRC_19_layers.caffemodel'
 vgg_ilsvrc_19_modelFileName = os.path.join(vgg_dir, 'VGG_ILSVRC_19_layers.caffemodel')
-# dataPath = '/tmp3/alvin/arctic_data/coco/'
 dataPath = coco_dir
-# annotation_path = '/tmp3/alvin/dataset/MSCOCO2014/captions_train2014.json'
 annotation_path = os.path.join(coco_dir, 'annotations', 'captions_train2014.json')
-#splitFileName = dataPath + 'dataset_coco.json'
 experimentPrefix = '.exp1'
 print 'End Setup'
 
@@ -63,30 +63,24 @@ print 'End Setup caffe'
 # set net to batch size of 50
 # net.blobs['data'].reshape(10,3,224,224)
 print 'Start middle'
-# files = [ 'val','test','train']
-files = [  ] # array containing not yet finished items
-for fname in files:
-    print fname 
+files = [ 'val','test']
+# files = [ 'val' ]
+# files = [ 'test' ]
+
+# for fname in files:
+# for fname in ['test']:
+for fname in []:
+    print fname
     f = open('./splits/coco_'+fname+'.txt')
     counter = 0
     imageList = [i for i in f]
     numImage = len(imageList)
-    # pdb.set_trace()
-    if fname == 'train':
-        result = np.memmap('tmp.np.array', dtype=np.float64, mode='w+', shape=(numImage, 100352))
-    else:
-        result = np.empty((numImage, 100352))
+    result = np.memmap('tmp.np.array', dtype=np.float64, mode='w+', shape=(numImage, 100352))
 
     for i in range(numImage):
         fn = imageList[i].rstrip()
-        if fname=='train':
-            img_p = os.path.join(trainImagesPath, fn)
-            # net.blobs['data'].data[...] = transformer.preprocess('data', caffe.io.load_image(trainImagesPath+fn))
-            net.blobs['data'].data[...] = transformer.preprocess('data', caffe.io.load_image(img_p))
-        else:
-            img_p = os.path.join(valImagesPath, fn)
-            # net.blobs['data'].data[...] = transformer.preprocess('data', caffe.io.load_image(valImagesPath+fn))
-            net.blobs['data'].data[...] = transformer.preprocess('data', caffe.io.load_image(img_p))
+        img_p = os.path.join(imagesPaths[fname], fn)
+        net.blobs['data'].data[...] = transformer.preprocess('data', caffe.io.load_image(img_p))
         out = net.forward()
         feat = net.blobs['conv5_4'].data[0]
         reshapeFeat = np.swapaxes(feat,0,2)
@@ -99,16 +93,9 @@ for fname in files:
 
     resultSave = scipy.sparse.csr_matrix(result)
     resultSave32 = resultSave.astype('float32')
-    if fname == 'train':
-        np.savez(dataPath + 'coco_feature.' + fname + experimentPrefix, data=resultSave32.data, indices=resultSave32.indices, indptr=resultSave32.indptr, shape=resultSave.shape)
-    else:
-        fileName = open(dataPath + 'coco_feature.' + fname + experimentPrefix + '.pkl','wb') 
-        pickle.dump(resultSave32, fileName, -1) 
-        fileName.close()
+    np.savez(dataPath + 'coco_feature.' + fname + experimentPrefix, data=resultSave32.data, indices=resultSave32.indices, indptr=resultSave32.indptr, shape=resultSave.shape)
 
 print 'End middle'
-
-
 
 print 'Start end'
 #np.savez(dataPath + 'coco_feature.' + fname + experimentPrefix, data=resultSave32.data, indices=resultSave32.indices, indptr=resultSave32.indptr, shape=resultSave.shape)
@@ -122,36 +109,21 @@ def load_sparse_csr(filename):
 
 capDict = pickle.load(open('capdict.pkl','rb'))
 
-files = ['test', 'val']
-for name in files:
-    counter = 0
-    with open(dataPath + 'coco_feature.' + name + experimentPrefix + '.pkl','rb') as fp:
-        feat = pickle.load(fp)
-    filenames = open('./splits/coco_'+name+'.txt')
-    cap = []
-    for imageFile in filenames:
-        imageFile = imageFile.rstrip()
-        for sen in capDict[imageFile]:
-            cap.append([sen.rstrip(), counter])
-        counter += 1
-    saveFile = open(dataPath + 'coco_align.' + name + experimentPrefix + '.pkl', 'wb') 
-    pickle.dump(cap, saveFile, protocol=pickle.HIGHEST_PROTOCOL) 
-    pickle.dump(feat, saveFile, protocol=pickle.HIGHEST_PROTOCOL)
-    saveFile.close()
-    filenames.close()
-
-files = ['train']
 for name in files:
     counter = 0
     filenames = open('./splits/coco_'+name+'.txt')
     cap = []
     for imageFile in filenames:
         imageFile = imageFile.rstrip()
-        for sen in capDict[imageFile]:
-            cap.append([sen.rstrip(), counter])
+        if name != 'test':
+            for sen in capDict[imageFile]:
+                cap.append([sen.rstrip(), counter])
+        else:
+            for _ in range(5):
+                cap.append(["", counter])
         counter += 1
-    saveFile = open(dataPath + 'coco_align.' + name + experimentPrefix + '.pkl', 'wb') 
-    pickle.dump(cap, saveFile, protocol=pickle.HIGHEST_PROTOCOL) 
+    saveFile = open(dataPath + 'coco_align.' + name + experimentPrefix + '.pkl', 'wb')
+    pickle.dump(cap, saveFile, protocol=pickle.HIGHEST_PROTOCOL)
     saveFile.close()
     filenames.close()
 

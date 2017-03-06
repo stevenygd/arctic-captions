@@ -4,7 +4,7 @@ import pandas as pd
 import nltk
 import os
 
-coco_dir = "/home/ec2-user/captions/l-arctic-captions/data/coco/"
+coco_dir = "/home/gy46/arctic-captions/data/coco/"
 annotation_path= os.path.join(coco_dir, 'captions.token')
 # annotation_path = "/tmp3/alvin/arctic_data/coco/captions.token"
 annotations = pd.read_table(annotation_path, sep='\t', header=None,names=['image', 'caption'])

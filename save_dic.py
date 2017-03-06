@@ -4,7 +4,7 @@ import json
 import cPickle
 
 
-coco_dir = "/home/ec2-user/captions/l-arctic-captions/data/coco/"
+coco_dir = "/home/gy46/arctic-captions/data/coco/"
 coco_annotations = os.path.join(coco_dir, 'annotations')
 
 def rename_train(s):

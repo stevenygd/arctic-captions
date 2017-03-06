@@ -78,6 +78,8 @@ def train(dim_word=100,  # word vector dimensionality
     print 'Loading data'
     load_data, prepare_data = get_dataset(dataset)
     train, valid, test, worddict = load_data(path=data_path)
+    if dataset == 'coco':
+        valid, _ = valid # the second one contains all the validation data
 
     # index 0 and 1 always code for the end of sentence and unknown token
     word_idict = dict()
